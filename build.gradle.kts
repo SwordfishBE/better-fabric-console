@@ -15,12 +15,12 @@ version = "1.3.0-SNAPSHOT"
 group = "xyz.jpenilla"
 description = "Server-side Fabric mod enhancing the console with tab completions, colored log output, command syntax highlighting, command history, and more."
 
-val minecraftVersion = "26.1.1"
+val minecraftVersion = "26.1.2"
 
 dependencies {
   minecraft("com.mojang:minecraft:$minecraftVersion")
-  implementation("net.fabricmc:fabric-loader:0.18.6")
-  implementation("net.fabricmc.fabric-api:fabric-api:0.145.3+26.1.1")
+  implementation("net.fabricmc:fabric-loader:0.19.2")
+  implementation("net.fabricmc.fabric-api:fabric-api:0.146.0+26.1.2")
 
   annotationProcessor("org.apache.logging.log4j:log4j-core:2.25.3")
 
@@ -33,7 +33,7 @@ dependencies {
   implementation("org.fusesource.jansi:jansi:2.4.2")
   include("org.fusesource.jansi:jansi:2.4.2")
 
-  implementation("net.kyori:adventure-platform-fabric:6.9.0-SNAPSHOT")
+  implementation("net.kyori:adventure-platform-fabric:6.9.0")
 
   implementation(transitiveInclude("org.spongepowered:configurate-hocon:4.2.0") {
     exclude("net.kyori", "option") // provided by adventure-platform-fabric
@@ -61,7 +61,7 @@ fabricModJson {
   mainEntrypoint("xyz.jpenilla.betterfabricconsole.BetterFabricConsole")
   entrypoint("preLaunch", "xyz.jpenilla.betterfabricconsole.BetterFabricConsolePreLaunch")
   mixin("better-fabric-console.mixins.json")
-  depends("fabricloader", ">=0.18.6")
+  depends("fabricloader", ">=0.19.2")
   depends("fabric-api", "*")
   depends("minecraft", ">=$minecraftVersion", "<26.2")
   depends("adventure-platform-fabric", "*")

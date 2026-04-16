@@ -37,10 +37,6 @@ public final class TerminalModeDetection {
   }
 
   private static TerminalMode detectMode() {
-    if (!CONSOLE_INPUT_AVAILABLE) {
-      return TerminalMode.DUMB;
-    }
-
     try (Terminal terminal = TerminalBuilder.builder().system(true).dumb(false).build()) {
       return Terminal.TYPE_DUMB.equals(terminal.getType()) ? TerminalMode.DUMB : TerminalMode.INTERACTIVE;
     } catch (final IOException | IllegalStateException e) {
