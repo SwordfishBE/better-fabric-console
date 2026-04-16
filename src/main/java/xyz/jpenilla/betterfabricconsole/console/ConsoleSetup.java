@@ -23,6 +23,7 @@
  */
 package xyz.jpenilla.betterfabricconsole.console;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -33,6 +34,8 @@ import org.jline.reader.Highlighter;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.Parser;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import org.jspecify.annotations.NullMarked;
 import xyz.jpenilla.betterfabricconsole.configuration.Config;
 
@@ -48,8 +51,11 @@ public final class ConsoleSetup {
   ) {
     System.setProperty("org.jline.reader.support.parsedline", "true"); // to hide a warning message about the parser not supporting
 
+    final Terminal terminal = buildTerminal();
+
     return LineReaderBuilder.builder()
       .appName("Dedicated Server")
+      .terminal(terminal)
       .variable(LineReader.HISTORY_FILE, Paths.get(".console_history"))
       .completer(completer)
       .highlighter(highlighter)
@@ -59,6 +65,26 @@ public final class ConsoleSetup {
       .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
       .option(LineReader.Option.COMPLETE_IN_WORD, true)
       .build();
+  }
+
+  private static Terminal buildTerminal() {
+    try {
+      return TerminalBuilder.builder()
+        .system(true)
+        .dumb(false)
+        .nativeSignals(true)
+        .build();
+    } catch (final IOException | IllegalStateException ex) {
+      try {
+        return TerminalBuilder.builder()
+          .system(true)
+          .dumb(true)
+          .nativeSignals(true)
+          .build();
+      } catch (final IOException fallbackEx) {
+        throw new IllegalStateException("Failed to initialize console terminal", fallbackEx);
+      }
+    }
   }
 
   public static ConsoleState init(
